@@ -1,0 +1,62 @@
+server {
+
+    server_name 34.88.93.186 tests.uz www.tests.uz;
+
+    location / {
+            root /home/r/react_tests/build;
+            index index.html;
+            try_files $uri $uri/ /index.html;
+    }
+
+    location /django/ {
+        try_files $uri @proxy_api;
+    }
+
+    location @proxy_api {
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_set_header X-Url-Scheme $scheme;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        #proxy_set_header Host $http_host;
+		proxy_set_header Host $host;
+        proxy_redirect off;
+        include proxy_params;
+        proxy_pass http://unix:/run/gunicorn.sock;
+    }
+
+    location /django_static/ {
+        autoindex on;
+        alias /home/r/django_tests/django_static/;
+    }
+
+
+    listen [::]:443 ssl ipv6only=on; # managed by Certbot
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/tests.uz/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/tests.uz/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+
+}
+
+server {
+    if ($host = www.tests.uz) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    if ($host = tests.uz) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+        listen 80 default_server;
+        listen [::]:80 default_server;
+
+    server_name 34.88.93.186 tests.uz www.tests.uz;
+    return 404; # managed by Certbot
+
+
+
+
+}

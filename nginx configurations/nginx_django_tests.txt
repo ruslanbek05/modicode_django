@@ -1,0 +1,43 @@
+server {
+
+server_name 34.125.15.156 tests.uz www.tests.uz;
+
+location / {
+        root /home/r/react_tests/build;
+
+        index index.html;
+}
+
+
+
+    listen [::]:443 ssl ipv6only=on; # managed by Certbot
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/tests.uz/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/tests.uz/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+
+}
+server {
+    if ($host = www.tests.uz) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    if ($host = tests.uz) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+
+listen 80 default_server;
+listen [::]:80 default_server;
+
+server_name 34.125.15.156 tests.uz www.tests.uz;
+    return 404; # managed by Certbot
+
+
+
+
+}
