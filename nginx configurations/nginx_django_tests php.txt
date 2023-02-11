@@ -1,10 +1,10 @@
 ----------------------------------------------------------------------------------------
 server {
     listen 8000;
-    server_name 34.88.113.81 tests.uz www.tests.uz;
+    server_name 104.197.195.183 modicode.uz www.modicode.uz;
 	
 	location /static/ {
-        root /home/r/django_tests;
+        root /home/r/modicode_django;
     }
 
     location / {
